@@ -9,6 +9,7 @@ endif()
 # F I N D  D E P E N D E N C I E S
 find_package(ament_cmake REQUIRED)
 find_package(rclcpp REQUIRED)
+find_package(sensor_msgs REQUIRED)
 find_package(sonia_common_ros2 REQUIRED)
 find_package(std_srvs REQUIRED)
 find_package(std_msgs REQUIRED)
@@ -40,6 +41,6 @@ install(TARGETS
 
 #==========================================================================
 # L I N K  D E P E N D E N C I E S
-ament_target_dependencies(${PROJECT_NAME} rclcpp sonia_common_ros2 std_msgs std_srvs)
+ament_target_dependencies(${PROJECT_NAME} rclcpp sensor_msgs sonia_common_ros2 std_msgs std_srvs)
 
 ament_package()
