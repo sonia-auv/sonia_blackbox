@@ -1,11 +1,9 @@
 #pragma once
 
 #include <rclcpp/rclcpp.hpp>
-#include <sonia_common_ros2/msg/battery_power_messages.hpp>
-#include <sonia_common_ros2/msg/motor_power_messages.hpp>
-#include <sonia_common_ros2/msg/body_velocity_dvl.hpp>
-#include <std_msgs/msg/float32.hpp>
-#include <sensor_msgs/msg/imu.hpp>
+#include <sonia_common_ros2/msg/node_status.hpp>
+#include <sonia_common_ros2/srv/record_bag_service.hpp>
+#include <rosbag2_transport/recorder.hpp>
 
 namespace sonia_blackbox{
 
@@ -16,16 +14,27 @@ namespace sonia_blackbox{
             ~BlackBox() override = default;
 
         private:
-            void BatteryCallback(const sonia_common_ros2::msg::BatteryPowerMessages &msg);
-            void MotorCallback(const sonia_common_ros2::msg::MotorPowerMessages &msg);
-            void DvlCallback(const sonia_common_ros2::msg::BodyVelocityDVL &msg);
-            void DepthCallback(const std_msgs::msg::Float32 &msg);
-            void ImuCallback(const sensor_msgs::msg::Imu &msg);
+            /**
+             * @brief Process client requests for ros bag recordings.
+             * @param request Request information from the client.
+             * @param response Response from the server.
+             */
+            void processRecordRequest(const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Request> request, std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Response> response);
+            /**
+             * @brief Publishes node information of its state and quality.
+             */
+            void publishStatus();
 
-            rclcpp::Subscription<sonia_common_ros2::msg::BatteryPowerMessages>::SharedPtr battery_sub;
-            rclcpp::Subscription<sonia_common_ros2::msg::MotorPowerMessages>::SharedPtr motor_sub;
-            rclcpp::Subscription<sonia_common_ros2::msg::BodyVelocityDVL>::SharedPtr dvl_sub;
-            rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr imu_sub;
-            rclcpp::Subscription<std_msgs::msg::Float32>::SharedPtr depth_sub;
+            std::shared_ptr<rosbag2_transport::Recorder> recorder_;
+
+            rclcpp::TimerBase::SharedPtr timer_node_status_;
+            rclcpp::Publisher<sonia_common_ros2::msg::NodeStatus>::SharedPtr pub_node_status_;
+            rclcpp::Service<sonia_common_ros2::srv::RecordBagService>::SharedPtr bag_service_;
+            
+            std::string save_path_;
+            std::string filename_;
+            bool is_recording_;
+            sonia_common_ros2::msg::NodeStatus node_status_;
+            
     };
 }

@@ -34,12 +34,9 @@
 
 | Type          | Name                                    | Direction       | Message/Service Type                         | Description                                |
 | ------------- | --------------------------------------- | --------------- | -------------------------------------------- | ------------------------------------------ |
-| Topic         | `/provider_power/battery_voltages`      | Published       | `sonia_common_ros2/msg/BatteryPowerMessages` | The measured battery voltages              |
-| Topic         | `/provider_power/battery_currents`      | Published       | `sonia_common_ros2/msg/BatteryPowerMessages` | The measured battery currents              |
-| Topic         | `/provider_power/motor_voltages`        | Published       | `sonia_common_ros2/msg/MotorPowerMessages`   | The measured motor voltages                |
-| Topic         | `/provider_power/motor_currents`        | Published       | `sonia_common_ros2/msg/MotorPowerMessages`   | The measured motor currents                |
+| Topic         | `/provider_power/battery_voltages`      | Subscribed       | `sonia_common_ros2/msg/BatteryPowerMessages` | The measured battery voltages              |
+| Topic         | `/provider_power/motor_voltages`        | Subscribed       | `sonia_common_ros2/msg/MotorPowerMessages`   | The measured motor voltages                |
 | Topic         | `/provider_power/motor_feedback`        | Published       | `sonia_common_ros2/msg/MotorFeedback`        | Feedback of the motors state               |
-| Topic         | `/provider_thruster/thruster_pwm`       | Subscribed      | `sonia_common_ros2/msg/MotorPwm`             | Controls the PWM of the motors             |
 
 ---
 ## Build Instructions
