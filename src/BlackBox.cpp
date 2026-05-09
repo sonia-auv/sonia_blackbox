@@ -12,8 +12,22 @@ using namespace std::placeholders;
 namespace sonia_blackbox{
     BlackBox::BlackBox(): Node("provider_blackbox")
     {
+        auto pwuid = getpwuid(getuid());
+        if (pwuid == nullptr)
+        {
+            throw std::runtime_error("Can't find HOME directory");
+        }
+
+        std::string path = pwuid->pw_dir;
+        std::string ssd_path = path + "/ssd";
+
+        if (std::filesystem::exists(ssd_path) && std::filesystem::is_directory(ssd_path))
+            save_path_ = path + "/ssd/vault/";
+        else
+            save_path_ = path + "/vault/";
+
         pub_node_status_ = this->create_publisher<sonia_common_ros2::msg::NodeStatus>("/system_monitor/node_status", 1);
-        bag_service_ = this->create_service<sonia_common_ros2::srv::RecordBagService>(
+        box_service_ = this->create_service<sonia_common_ros2::srv::RecordBagService>(
             "/provider_blackbox/record", std::bind(&BlackBox::processRecordRequest, this, _1, _2));
         timer_node_status_ = this->create_wall_timer(500ms, std::bind(&BlackBox::publishStatus, this));
 
@@ -31,11 +45,6 @@ namespace sonia_blackbox{
             case sonia_common_ros2::srv::RecordBagService::Request::CMD_START:
             {
                 auto path = save_path_ + request->filename;
-                if (std::filesystem::exists(path) && std::filesystem::is_directory(path))
-                {
-                    response->message = "Error!! A bag with the same name already exists";
-                    break;
-                }
                 if (is_recording_)
                 {
                     RCLCPP_INFO(this->get_logger(),

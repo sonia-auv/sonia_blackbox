@@ -32,11 +32,11 @@
 
 ## Registered Topics / Services / Actions
 
-| Type          | Name                                    | Direction       | Message/Service Type                         | Description                                |
-| ------------- | --------------------------------------- | --------------- | -------------------------------------------- | ------------------------------------------ |
-| Topic         | `/provider_power/battery_voltages`      | Subscribed       | `sonia_common_ros2/msg/BatteryPowerMessages` | The measured battery voltages              |
-| Topic         | `/provider_power/motor_voltages`        | Subscribed       | `sonia_common_ros2/msg/MotorPowerMessages`   | The measured motor voltages                |
-| Topic         | `/provider_power/motor_feedback`        | Published       | `sonia_common_ros2/msg/MotorFeedback`        | Feedback of the motors state               |
+| Type       | Name                          | Direction      | Message/Service Type                     | Description                          |
+| ---------- | ----------------------------- | -------------- | ---------------------------------------- | ------------------------------------ |
+| Topic      | `/system_monitor/node_status` | Published      | `sonia_common_ros2/msg/NodeStatus`       | Message contains information of the state of a node |
+| Service    | `/provider_blackbox/record`   | Service Server | `sonia_common_ros2/srv/RecordBagService` | Service handles blackbox recording   |
+
 
 ---
 ## Build Instructions

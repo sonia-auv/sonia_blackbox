@@ -29,7 +29,7 @@ namespace sonia_blackbox{
 
             rclcpp::TimerBase::SharedPtr timer_node_status_;
             rclcpp::Publisher<sonia_common_ros2::msg::NodeStatus>::SharedPtr pub_node_status_;
-            rclcpp::Service<sonia_common_ros2::srv::RecordBagService>::SharedPtr bag_service_;
+            rclcpp::Service<sonia_common_ros2::srv::RecordBagService>::SharedPtr box_service_;
             
             std::string save_path_;
             std::string filename_;
