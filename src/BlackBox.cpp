@@ -17,6 +17,9 @@ namespace sonia_blackbox{
         {
             throw std::runtime_error("Can't find HOME directory");
         }
+        //Generate list of node names to be monitored from a config file
+        this->declare_parameter("node_list", rclcpp::PARAMETER_STRING_ARRAY);
+        _sources = this->get_parameter("topic_list").as_string_array();
 
         std::string path = pwuid->pw_dir;
         std::string ssd_path = path + "/ssd/vault/";
@@ -39,12 +42,11 @@ namespace sonia_blackbox{
             auto writer = std::make_shared<rosbag2_cpp::Writer>();
             rosbag2_storage::StorageOptions options;
             options.uri = path;
-            filename_ = "";
             options.storage_id = "mcap";
 
             rosbag2_transport::RecordOptions record_options;
             record_options.all = false;
-            //record_options.topics = null;
+            record_options.topics = _sources;
             record_options.rmw_serialization_format = "cdr";
 
             recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options);
@@ -59,7 +61,7 @@ namespace sonia_blackbox{
         {
             recorder_->stop();
             is_recording_ = false;
-            response->message = "Recording stopped, rosbag saved : " + filename_;
+            response->message = "Recording stopped, rosbag saved : ";
 
             node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
         }
