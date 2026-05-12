@@ -2,7 +2,7 @@
 
 #include <rclcpp/rclcpp.hpp>
 #include <sonia_common_ros2/msg/node_status.hpp>
-#include <sonia_common_ros2/srv/record_bag_service.hpp>
+#include <std_srvs/srv/trigger.hpp>
 #include <rosbag2_transport/recorder.hpp>
 
 namespace sonia_blackbox{
@@ -19,7 +19,7 @@ namespace sonia_blackbox{
              * @param request Request information from the client.
              * @param response Response from the server.
              */
-            void processRecordRequest(const std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Request> request, std::shared_ptr<sonia_common_ros2::srv::RecordBagService::Response> response);
+            void processRecordRequest(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
             /**
              * @brief Publishes node information of its state and quality.
              */
@@ -29,7 +29,7 @@ namespace sonia_blackbox{
 
             rclcpp::TimerBase::SharedPtr timer_node_status_;
             rclcpp::Publisher<sonia_common_ros2::msg::NodeStatus>::SharedPtr pub_node_status_;
-            rclcpp::Service<sonia_common_ros2::srv::RecordBagService>::SharedPtr box_service_;
+            rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr box_service_;
             
             std::string save_path_;
             std::string filename_;

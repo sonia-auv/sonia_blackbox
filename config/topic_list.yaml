@@ -1,0 +1,4 @@
+/sonia_blackbox:
+  ros__parameters:
+    topic_list:
+      - /system_monitor/node_status
