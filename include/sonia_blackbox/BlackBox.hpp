@@ -32,7 +32,7 @@ namespace sonia_blackbox{
             rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr box_service_;
             
             std::string save_path_;
-            std::vector<std::string> _sources;
+            std::vector<std::string> sources_;
             bool is_recording_;
             sonia_common_ros2::msg::NodeStatus node_status_;
             
