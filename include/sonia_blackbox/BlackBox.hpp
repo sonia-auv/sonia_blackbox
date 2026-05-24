@@ -13,6 +13,12 @@ namespace sonia_blackbox{
             BlackBox();
             ~BlackBox() override = default;
 
+            /**
+             * @brief Setter to add an internal node to the main multithreadedexecutor.
+             * @param executor Passed executor.
+             */
+            void setExecutor(std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor);
+
         private:
             /**
              * @brief Process client requests for ros bag recordings.
@@ -26,6 +32,7 @@ namespace sonia_blackbox{
             void publishStatus();
 
             std::shared_ptr<rosbag2_transport::Recorder> recorder_;
+            std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor_;
 
             rclcpp::TimerBase::SharedPtr timer_node_status_;
             rclcpp::Publisher<sonia_common_ros2::msg::NodeStatus>::SharedPtr pub_node_status_;
@@ -33,8 +40,10 @@ namespace sonia_blackbox{
             
             std::string save_path_;
             std::vector<std::string> sources_;
-            bool is_recording_;
+            std::atomic<bool> is_recording_;
             sonia_common_ros2::msg::NodeStatus node_status_;
+
+            static constexpr auto RECORDER_WAIT = std::chrono::milliseconds(150);
             
     };
 }

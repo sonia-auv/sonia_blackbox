@@ -1,4 +1,4 @@
-/sonia_blackbox:
+/blackbox_provider:
   ros__parameters:
     topic_list:
       - /system_monitor/node_status

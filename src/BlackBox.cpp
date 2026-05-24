@@ -13,14 +13,15 @@ using std::placeholders::_2;
 namespace sonia_blackbox{
     BlackBox::BlackBox(): Node("blackbox_provider"), is_recording_{false}
     {
+        //Generate list of node names to be monitored from a config file
+        this->declare_parameter("topic_list", rclcpp::PARAMETER_STRING_ARRAY);
+        sources_ = this->get_parameter("topic_list").as_string_array();
+
         auto pwuid = getpwuid(getuid());
         if (pwuid == nullptr)
         {
             throw std::runtime_error("Can't find HOME directory");
-        }
-        //Generate list of node names to be monitored from a config file
-        this->declare_parameter("node_list", rclcpp::PARAMETER_STRING_ARRAY);
-        sources_ = this->get_parameter("topic_list").as_string_array();
+        }   
 
         std::string path = pwuid->pw_dir;
         save_path_ = path + "/ssd/vault/";
@@ -35,11 +36,16 @@ namespace sonia_blackbox{
         node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
     }
 
+    void BlackBox::setExecutor(std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor)
+    {
+        executor_= executor;
+    }
+
     void BlackBox::processRecordRequest(
         const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response)
     {
         if(!is_recording_){
-            auto file_path = save_path_;
+            auto file_path = save_path_ + "black_box";
             auto writer = std::make_shared<rosbag2_cpp::Writer>();
             rosbag2_storage::StorageOptions options;
             options.max_bagfile_size = 500000000; //500Mb
@@ -52,6 +58,7 @@ namespace sonia_blackbox{
             record_options.rmw_serialization_format = "cdr";
 
             recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options);
+            executor_->add_node(recorder_);
 
             recorder_->record();
             is_recording_ = true;
@@ -62,6 +69,10 @@ namespace sonia_blackbox{
         else
         {
             recorder_->stop();
+            std::this_thread::sleep_for(RECORDER_WAIT); //sleep to allow recorder to stop correctly
+        
+            executor_->remove_node(recorder_->get_node_base_interface());
+            recorder_.reset();
             is_recording_ = false;
             response->message = "Recording stopped, rosbag saved : ";
             node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
