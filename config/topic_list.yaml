@@ -2,3 +2,5 @@
   ros__parameters:
     topic_list:
       - /system_monitor/node_status
+      - /provider_power/battery_voltages
+      - /provider_imu/imu_info

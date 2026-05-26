@@ -19,13 +19,18 @@ namespace sonia_blackbox{
              */
             void setExecutor(std::shared_ptr<rclcpp::executors::MultiThreadedExecutor> executor);
 
-        private:
             /**
-             * @brief Process client requests for ros bag recordings.
-             * @param request Request information from the client.
-             * @param response Response from the server.
+             * @brief Command to beginning recording for the blackbox.
              */
-            void processRecordRequest(const std::shared_ptr<std_srvs::srv::Trigger::Request> request, std::shared_ptr<std_srvs::srv::Trigger::Response> response);
+            void startBag();
+
+            /**
+             * @brief Command to end the recording for the blackbox.
+             */
+            void stopBag();
+
+        private:
+            
             /**
              * @brief Publishes node information of its state and quality.
              */
@@ -36,14 +41,13 @@ namespace sonia_blackbox{
 
             rclcpp::TimerBase::SharedPtr timer_node_status_;
             rclcpp::Publisher<sonia_common_ros2::msg::NodeStatus>::SharedPtr pub_node_status_;
-            rclcpp::Service<std_srvs::srv::Trigger>::SharedPtr box_service_;
             
             std::string save_path_;
             std::vector<std::string> sources_;
-            std::atomic<bool> is_recording_;
             sonia_common_ros2::msg::NodeStatus node_status_;
 
             static constexpr auto RECORDER_WAIT = std::chrono::milliseconds(150);
-            
+            static constexpr uint16_t SPLIT_DURATION = 3*60; //bag duration per split
+            inline static const std::string RECORDER_NODE_NAME = "box_recorder"; //custom recorder node name
     };
 }
