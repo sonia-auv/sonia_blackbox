@@ -43,8 +43,8 @@ namespace sonia_blackbox{
 
     void BlackBox::startBag()
     {
+        //manage history of recorded bags
         fs::path dir = save_path_;
-
         fs::create_directories(dir);
 
         fs::path old = dir/"black_box_2";
@@ -52,6 +52,7 @@ namespace sonia_blackbox{
         {
             fs::remove_all(old);
         }
+
         for(int i = 1; i>=0; --i)
         {
             fs::path src = dir / ("black_box_" + std::to_string(i));
@@ -63,6 +64,7 @@ namespace sonia_blackbox{
             }
         }
 
+        //start new blackbox recording
         auto file_path = save_path_ + "black_box_0";
         auto writer = std::make_shared<rosbag2_cpp::Writer>();
         rosbag2_storage::StorageOptions options;
@@ -79,6 +81,7 @@ namespace sonia_blackbox{
         executor_->add_node(recorder_);
 
         recorder_->record();
+        std::this_thread::sleep_for(RECORDER_WAIT); //sleep to allow recorder to start correctly
 
         node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_RUNNING;
     }

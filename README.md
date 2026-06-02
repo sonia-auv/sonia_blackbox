@@ -1,6 +1,6 @@
 # sonia_blackbox
 
-*description here*
+**sonia_blackbox** is a software tool that records all data traffic from topics defined in the `config/topic_list.yaml`. The purpose of this project is to be able to recover data in order to analyze the prototype's performance after any type of tests. This includes data from all the sensors (DVL, depth, IMU) and other necessary components. the project uses **ROS2** rosbag tool for its recordings of the system. 
 
 ---
 
