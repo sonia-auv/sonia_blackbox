@@ -2,12 +2,14 @@
 #include <unistd.h>
 #include <chrono>
 #include <filesystem>
+#include <fstream>
 #include <rosbag2_storage/storage_options.hpp>
 #include <rosbag2_transport/record_options.hpp>
 
 #include "sonia_blackbox/BlackBox.hpp"
 
 using namespace std::chrono_literals;
+namespace fs = std::filesystem;
 using std::placeholders::_1;
 using std::placeholders::_2;
 namespace sonia_blackbox{
@@ -41,24 +43,44 @@ namespace sonia_blackbox{
 
     void BlackBox::startBag()
     {
-            auto file_path = save_path_ + "black_box";
-            auto writer = std::make_shared<rosbag2_cpp::Writer>();
-            rosbag2_storage::StorageOptions options;
-            options.max_bagfile_duration = SPLIT_DURATION;
-            options.uri = file_path;
-            options.storage_id = "mcap";
+        fs::path dir = save_path_;
 
-            rosbag2_transport::RecordOptions record_options;
-            record_options.all = false;
-            record_options.topics = sources_;
-            record_options.rmw_serialization_format = "cdr";
+        fs::create_directories(dir);
 
-            recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options, RECORDER_NODE_NAME);
-            executor_->add_node(recorder_);
+        fs::path old = dir/"black_box_2";
+        if(fs::exists(old))
+        {
+            fs::remove_all(old);
+        }
+        for(int i = 1; i>=0; --i)
+        {
+            fs::path src = dir / ("black_box_" + std::to_string(i));
+            fs::path dst = dir / ("black_box_" + std::to_string(i + 1));
 
-            recorder_->record();
+            if (fs::exists(src))
+            {
+                fs::rename(src, dst);
+            }
+        }
 
-            node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_RUNNING;
+        auto file_path = save_path_ + "black_box_0";
+        auto writer = std::make_shared<rosbag2_cpp::Writer>();
+        rosbag2_storage::StorageOptions options;
+        options.max_bagfile_duration = SPLIT_DURATION;
+        options.uri = file_path;
+        options.storage_id = "mcap";
+
+        rosbag2_transport::RecordOptions record_options;
+        record_options.all = false;
+        record_options.topics = sources_;
+        record_options.rmw_serialization_format = "cdr";
+
+        recorder_ = std::make_shared<rosbag2_transport::Recorder>(writer, options, record_options, RECORDER_NODE_NAME);
+        executor_->add_node(recorder_);
+
+        recorder_->record();
+
+        node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_RUNNING;
     }
     void BlackBox::stopBag()
     {
