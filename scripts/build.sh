@@ -11,7 +11,7 @@ sudo apt update
 
 $DOCKER_CI_DIR/scripts/build.sh sonia_common_ros2
 
-cd sonia_monitor
+cd sonia_blackbox
 
 source /build/sonia_common_ros2/INSTALL_BASE/setup.sh
 
