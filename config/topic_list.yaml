@@ -1,6 +1,7 @@
 /blackbox_provider:
   ros__parameters:
     topic_list:
-      - /system_monitor/node_status
-      - /provider_power/battery_voltages
+      - /provider_depth/depth
       - /provider_imu/imu_info
+      - /provider_dvl/dvl_velocity
+      - /provider_power/battery_voltages
