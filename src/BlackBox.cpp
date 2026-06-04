@@ -25,9 +25,6 @@ namespace sonia_blackbox{
             throw std::runtime_error("Can't find HOME directory");
         }   
 
-        std::string path = pwuid->pw_dir;
-        save_path_ = path + "/ssd/vault/";
-
         pub_node_status_ = this->create_publisher<sonia_common_ros2::msg::NodeStatus>("/system_monitor/node_status", 1);
         timer_node_status_ = this->create_wall_timer(500ms, std::bind(&BlackBox::publishStatus, this));
 
@@ -43,29 +40,13 @@ namespace sonia_blackbox{
 
     void BlackBox::startBag()
     {
+        std::string path = std::string(getpwuid(getuid())->pw_dir)+ "/ssd/vault/";
+
         //manage history of recorded bags
-        fs::path dir = save_path_;
-        fs::create_directories(dir);
-
-        fs::path old = dir/"black_box_2";
-        if(fs::exists(old))
-        {
-            fs::remove_all(old);
-        }
-
-        for(int i = 1; i>=0; --i)
-        {
-            fs::path src = dir / ("black_box_" + std::to_string(i));
-            fs::path dst = dir / ("black_box_" + std::to_string(i + 1));
-
-            if (fs::exists(src))
-            {
-                fs::rename(src, dst);
-            }
-        }
+        rotateBags(path);
 
         //start new blackbox recording
-        auto file_path = save_path_ + "black_box_0";
+        auto file_path = path + "black_box_1";
         auto writer = std::make_shared<rosbag2_cpp::Writer>();
         rosbag2_storage::StorageOptions options;
         options.max_bagfile_duration = SPLIT_DURATION;
@@ -96,6 +77,29 @@ namespace sonia_blackbox{
         node_status_.state = sonia_common_ros2::msg::NodeStatus::STATE_IDLE;
     }
 
+    void BlackBox::rotateBags(const std::string save_path)
+    {
+        fs::path dir = save_path;
+        fs::create_directories(dir);
+
+        fs::path old = dir/("black_box_" + std::to_string(MAX_BAG_COUNT));
+        if(fs::exists(old)) //remove oldest if present
+        {
+            fs::remove_all(old);
+        }
+
+        for(int i = MAX_BAG_COUNT-1; i>0; --i) //rotate by remaning bags by number
+        {
+            fs::path src = dir / ("black_box_" + std::to_string(i));
+            fs::path dst = dir / ("black_box_" + std::to_string(i + 1));
+
+            if (fs::exists(src))
+            {
+                fs::rename(src, dst);
+            }
+        }
+
+    }
     void BlackBox::publishStatus()
     {
         node_status_.stamp = this->now();
