@@ -1,0 +1,18 @@
+@startuml Class Diagram
+title Class Diagram
+    class main{
+        }
+    class BlackBox{
+        - sources_ : std::vector<std::string>
+        - recorder_ : std::shared_ptr<rosbag2_transport::Recorder>
+    
+        + BlackBox()
+        + ~BlackBox()
+        + setExecutor(executor : std::Shared_ptr<rclcpp::executors::MultiThreadedExecutor>) : void
+        + startBag() : void
+        + stopBag() : void
+        - rotateBags(save_path : std::string) : void
+        - publishStatus() : void     
+
+    }
+@enduml

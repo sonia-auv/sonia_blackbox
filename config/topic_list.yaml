@@ -12,4 +12,3 @@
       - /provider_power/motor_voltages
       - /provider_power/motor_currents
       - /provider_power/motor_temperatures
-      
