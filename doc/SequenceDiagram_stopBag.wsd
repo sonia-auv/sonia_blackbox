@@ -1,0 +1,8 @@
+@startuml Sequence Diagram stopBag
+title Sequence Diagram stopBag
+
+participant BlackBox as sys
+
+-> sys : stopBag()
+
+@enduml

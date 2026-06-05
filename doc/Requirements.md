@@ -1,6 +1,6 @@
 # Node monitoring
 
-The **BlackBox** node logs multiple systems information for debugging purposes. Using **ROS2** tools, the node is able to capture all published data and saves them at a location. The node manages the number and size of logs it will maintain in order to keep the system healthy. 
+The **BlackBox** node logs multiple systems information for debugging purposes. Using **ROS2** tools, the node is able to capture all published data and saves them at a defined location. The node manages the number and size of logs it will maintain in order to keep the system healthy. 
 
 ## Requirements
 
