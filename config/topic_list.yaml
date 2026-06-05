@@ -1,0 +1,8 @@
+/blackbox_provider:
+  ros__parameters:
+    topic_list:
+      - /provider_depth/depth
+      - /provider_imu/imu_info
+      - /provider_dvl/dvl_velocity
+      - /zed/zed_node/imu/data
+      - /provider_power/battery_voltages
