@@ -1,8 +1,14 @@
 @startuml Sequence Diagram startBag
 title Sequence Diagram startBag
 
+participant rosbag2_transport::Recorder as rec
 participant BlackBox as sys
 
 -> sys : startBag()
+Activate sys
+sys -> sys : rotateBags(save_path : const std::string)
+Activate rec
+rec -> rec : record()
+deactivate rec
 
 @enduml
