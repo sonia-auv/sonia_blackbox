@@ -7,7 +7,7 @@ The **BlackBox** node logs multiple systems information for debugging purposes. 
 ### Requirement 1
 Titre : startBag\
 PreCondition : NA.\
-Post condition : Starts a recorder at launch and saves data at a specific location.
+Post condition : Starts a recorder at launch and saves data in the vault.
 
 ### Requirement 2
 Titre : stopBag\

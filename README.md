@@ -4,7 +4,7 @@
 The project uses **ROS2** rosbag tool for its recordings of the system and stores them in the directory `~/ssd/vault/` as showcased on the image. the order of reordings go from 1 to a defined maximum of recordings the blackbox will keep with the first being the most recent recording. 
 
 <div align="center">
-  <img src="images/storage_blackbox.png" alt="storage" width="400">
+  <img src="images/storage_blackbox.png" alt="storage" width="200">
 </div>   
 
 ---
