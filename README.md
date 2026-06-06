@@ -1,7 +1,7 @@
 # sonia_blackbox
 
 **sonia_blackbox** is a software tool that records all data traffic from topics defined in the `config/topic_list.yaml`. The purpose of this project is to be able to recover data in order to analyze the prototype's performance after any operation. This includes data from all the sensors (DVL, depth, IMU) and other necessary components.\
-The project uses **ROS2** rosbag tool for its recordings of the system and stores them in the directory `~/ssd/vault/` as showcased on the image. the order of reordings go from 1 to a defined maximum of recordings the blackbox will keep with the first being the most recent recording. 
+The project uses **ROS2** rosbag tool for its recordings of the system and stores them in the directory `~/ssd/vault/` as showcased on the image. the order of recordings go from 1 to a defined maximum of recordings the blackbox will keep with the first being the most recent recording. 
 
 <div align="center">
   <img src="images/storage_blackbox.png" alt="storage" width="350">
