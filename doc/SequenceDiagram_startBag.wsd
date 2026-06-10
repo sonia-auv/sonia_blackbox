@@ -1,0 +1,15 @@
+@startuml Sequence Diagram startBag
+title Sequence Diagram startBag
+
+participant BlackBox as sys
+participant Recorder as rec
+
+Activate sys
+-> sys : startBag()
+sys -> sys : rotateBags(save_path : const std::string)
+Activate rec
+sys -> rec : record()
+deactivate rec
+deactivate sys
+
+@enduml

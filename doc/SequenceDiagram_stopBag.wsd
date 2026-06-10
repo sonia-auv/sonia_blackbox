@@ -1,0 +1,15 @@
+@startuml Sequence Diagram stopBag
+title Sequence Diagram stopBag
+
+participant BlackBox as sys
+participant Recorder as rec
+
+Activate sys
+-> sys : stopBag()
+Activate rec
+sys -> rec : stop()
+sys -> rec : reset()
+deactivate rec
+deactivate sys
+
+@enduml
